@@ -1,0 +1,75 @@
+2016.5.3
+Module 1: Linux shell
+Shell-interface to the OS- get the OS to do things.
+ E.g run programs, manage files
+- graphical (clicking with mouth/touching with fingers )
+- command line – type the command at a prompt(more versatile)
+this course: bash (command line)
+
+Make sure using bash
+Log in + type echo $0
+
+Working with files:
+cat – displays the contents of files 
+e.g cat /usr/share/dict/words 
+     ⬇  ↘  ⬇    ↙
+   root  directories(contains files) 
+in linux, a dir is considered a special kind of file
+
+ctrl-c to stop(^c)
+ls- list files in the current directory(get the non-hidden files)
+ls –a –all files(including hidden ones)
+hidden files start with “ . ” (dot)
+pwd- prints current dir
+
+Q: type cat without anything？
+ Nothing happens. It is waiting for input. And then it prints what ever you type.
+Might be useful if we could capture the output in a file.
+
+cat > output.txt -
+^c will kill the program
+To stop: ^d at the beginning of the line send an EOF signal to cat (USE THIS)
+
+In general: command args > 
+-	file executes command args + capturing the output in file instead 
+of sending to screen
+called output redirection
+can also redirect input: cat < input.txt
+ -takes its input from input.txt instead of the keyboard
+ -displays the comtent of input.txt
+
+Q: what is the difference?
+Cat input.txt –passes the name input.txt as and argument to cat.
+Cat opens the file and displys its contents
+
+Cat < input.txt – the shell opens the file and passes its contents to cat in place of keyboard input
+
+
+Also: cat * . txt 
+          ⬇
+        globbing pattern
+* : match any sequence of characters. Shell finds all files in the current dir that match the pattern and substitutes them onto the command line
+cat a.txt b.txt c.txt ->cat opens all of them and display them all.
+
+Cat < *.txt (ERROR) – shell will only attach one file to cat’s input stream
+
+More globbing patterns please see the linux sheet
+Many commands accept both forms of input
+
+Q: Can do both input and output redirection?
+Cat < input.txt  > output.txt 
+-> send chars from input.txt to output.txt(copying the file)
+
+Every process is attached to 3 streams:
+Stdin-> program -> stderr
+               -> stdout
+
+by default, stdin = keyboard
+          stderr, stdout = screen
+<  connects stdin to a file
+>  connects stdout to a file
+2>  connects stderr to a file
+
+stderr – separate output stream for error messages, so that output and error msgs to go to different places. So that error msgs don't clutter output files or corrupt formatting
+Also- stdout may be buffered- system may wait to accumulate output before acturally displaying(flushing) it.
+Stderr is never buffered – you get the error msgs immediately
