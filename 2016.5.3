@@ -1,5 +1,5 @@
-2016.5.3
-Module 1: Linux shell
+#2016.5.3
+#Module 1: Linux shell
 Shell-interface to the OS- get the OS to do things.
  E.g run programs, manage files
 - graphical (clicking with mouth/touching with fingers )
@@ -48,7 +48,8 @@ Cat < input.txt – the shell opens the file and passes its contents to cat in p
 Also: cat * . txt 
           ⬇
         globbing pattern
-* : match any sequence of characters. Shell finds all files in the current dir that match the pattern and substitutes them onto the command line
+* : match any sequence of characters. Shell finds all files in the current dir that match the 
+    pattern and substitutes them onto the command line
 cat a.txt b.txt c.txt ->cat opens all of them and display them all.
 
 Cat < *.txt (ERROR) – shell will only attach one file to cat’s input stream
@@ -70,6 +71,7 @@ by default, stdin = keyboard
 >  connects stdout to a file
 2>  connects stderr to a file
 
-stderr – separate output stream for error messages, so that output and error msgs to go to different places. So that error msgs don't clutter output files or corrupt formatting
+stderr – separate output stream for error messages, so that output and error msgs to go to different places. 
+         So that error msgs don't clutter output files or corrupt formatting
 Also- stdout may be buffered- system may wait to accumulate output before acturally displaying(flushing) it.
-Stderr is never buffered – you get the error msgs immediately
+      Stderr is never buffered – you get the error msgs immediately
