@@ -1,0 +1,109 @@
+#2016.7.14
+If you know a function will never throw or propagate exceptions </br>
+declare it nonexcept which facilitates optimization </br>
+at minimum: swap and moves should be nonexept
+
+###Casting:
+in C:
+<pre><code>
+Node n;
+int *ip = (int *) &n;
+//cast: forces C++ to treat a Node * as an int *
+</code></pre>
+C-style cast should be avoided in C++ </br>
+If you must cast, use a C++ style cast
+
+4 kinds: </br>
+**1. static_cast("sensible" casts)**
+E.g: </br>
+double->int
+<pre><code>
+double d;
+int i = static_cast < int > (d);
+</code></pre>
+superclass ptr->subclass ptr
+<pre><code>
+Book *b = new Text {...};
+Text *t = static_cast < Text * > (b);
+</code></pre>
+You are taking the responsibility that b actually points at a Text </br>
+Saying "Trust me".
+
+**2. reinterpret_cast** (unsafe, implementation specific, "weird" conversions)
+<pre><code>
+Student s;
+Turtle *t = reinterpret_cast < Turtle * > (&s);
+</code></pre>
+
+**3. const_cast** </br>
+converting between const and non-const, the only C++ cast that can "cast away const" 
+<pre><code>
+void g(int *p); //g does not promise to keep *p constant
+//but what if g does not actually change *p?
+void f(const int *p) {
+ ...
+ g (const_cast < int * > (p));
+ } // f cannot change *p
+</code></pre>
+
+**4.dynamic_cast** </br>
+Is it safe to convert a  Book * to a Text *？ </br>
+<pre><code>
+Book *pb = ...;
+static_cast < Text * > (pb)->getTopic();
+</code></pre>
+Depends on what pb actually points at </br>
+Better to do a tentative cast, try it and see if it succeeds
+<pre><code>
+Book *pb = {...};
+Text *pt = dymamic_cast < Text * > (pb);
+</code></pre>
+
+If the cast works (pb really points at a Text, or a sublclass of Text) </br>
+then the cast fails, ot will be nullptr </br>
+<pre><code>
+if (pt) cout << pt->getTopic();
+else cout << "Not a Text" << endl;
+</code></pre>
+But these are options on raw ptrs, we should be using smart pointers </br>
+can we do this? -YES
+
+static_pointer_cast </br>
+const_pointer_cast </br>
+dynamic_pointer_cast </br>
+using def above to declare smart ptrs
+
+Can use dynamic casting to make decisions based on an object's runtime type </br>
+(RTTI: run time tipe information)
+
+void whatIsIt (shared_ptr < Book > b) {
+ if (dynamic_pointer_cast < Text > (b)) cout << "Text";
+ else if (dynamic)pointer_casr < Comic > (b)) cout << "Comic";
+ else cout << "normal book";
+ }
+ 
+ Note: dynamic casting only works on classes, with at least one virtual method 
+ 
+ Note: Code like this is highly coupled to the Book class hierarchy and may indicate bad design
+ 
+ Better: use virtual methods or write a visitor
+ 
+ Dynamic casting also works on references
+ <pre><code>
+ Text t {...};
+ Book &b = t;
+ Text &t2 = dynamic_cast < Text & > (b);
+ </code></pre>
+ If b "points to" a Text, then t2 is a ref to the same Text </br>
+ if not...? (NO such thing as a null reference), it will raise an exception
+ 
+ With dynamic reference casting, we can solve the polymorphic assignment problems
+ <pre><code>
+ Text &Text::operator= (const Book &other) { //virtual
+  Text &textother = dynamic_cast < Text & > (other); //throws an exception if other is not a text
+  if (this == &textother) return *thisl
+  Book::operator=(other);
+  topic=other.topic;
+  return *this;
+}
+ </code></pre>
